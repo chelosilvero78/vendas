@@ -1,21 +1,27 @@
 import { useState } from 'react'
 import { Layout, Input } from 'components'
+import { useProdutoService } from 'app/services'
+import { Produto } from 'app/models/produtos'
 
 export const CadastroProdutos: React.FC = () => {
 
+    const service = useProdutoService()
     const [ sku, setSku ] = useState<string>('')
     const [ preco, setPreco ] = useState<string>('')
     const [ nome, setNome ] = useState<string>('')
     const [ descricao, setDescricao ] = useState<string>('')    
 
     const submit = () => {
-        const produto = {
+        const produto: Produto = {
             sku, 
-            preco, 
+            preco: parseFloat(preco), 
             nome, 
             descricao
         }
-        console.log(produto)
+
+        service
+            .salvar(produto)
+            .then(produtoResposta => console.log(produtoResposta))
     }
 
     return (
@@ -50,13 +56,13 @@ export const CadastroProdutos: React.FC = () => {
 
            <div className="columns">
             <div className="field column is-full">
-                    <label className="label" htmlFor="inputDesc">Descrição: *</label>
-                    <div className="control">
-                        <textarea className="textarea" 
-                            id="inputDesc" value={descricao}
-                            onChange={ event => setDescricao(event.target.value) }
-                            placeholder="Digite a Descrição detalhada do produto" />
-                    </div>
+                <label className="label" htmlFor="inputDesc">Descrição: *</label>
+                <div className="control">
+                    <textarea className="textarea" 
+                        id="inputDesc" value={descricao}
+                        onChange={ event => setDescricao(event.target.value) }
+                        placeholder="Digite a Descrição detalhada do produto" />
+                </div>
             </div>
            </div>
 
